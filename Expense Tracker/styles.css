@@ -1,0 +1,17 @@
+body
+{
+    background: no-repeat center center fixed;
+    background-image: linear-gradient(to top right ,green,rgb(10, 192, 10),lightgreen, white);
+}
+
+h1
+{
+    margin-top: 10px;
+    text-align: center;
+}
+
+h4
+{
+    color: black;
+}
+
