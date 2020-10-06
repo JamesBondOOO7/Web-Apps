@@ -30,7 +30,14 @@ submit.addEventListener('click', function() {
 
     datesObj.push(dateTxt.value);
     descriptionsObj.push(descTxt.value);
-    amountsObj.push(amtTxt.value);
+    if(document.getElementById('spent').checked)
+    {
+        amountsObj.push(-1*Number(amtTxt.value));
+    }
+    else 
+    {
+        amountsObj.push(Number(amtTxt.value));
+    }
 
     localStorage.setItem("DOT", JSON.stringify(datesObj));
     localStorage.setItem("desc", JSON.stringify(descriptionsObj));
@@ -69,14 +76,28 @@ function showExpenses() {
 
     amountsObj.forEach(function(element, index){
         
-        html += `
+        if( Number(amountsObj[index]) < 0)
+        {
+            html += `
             <tr>
             <td>${datesObj[index]}</td>
             <td>${descriptionsObj[index]}</td>
-            <td>${"₹" + amountsObj[index]}</td>
+            <td style="color: red;">${"₹" + Math.abs(Number(amountsObj[index]))}</td>
             <td><button type="button" class="btn btn-danger" id=${index} onclick = "deleteTransaction(this.id)">Delete</button></td>
             </tr>
-        `;
+            `;
+        }
+        else
+        {
+            html += `
+            <tr>
+            <td>${datesObj[index]}</td>
+            <td>${descriptionsObj[index]}</td>
+            <td style="color: green;">${"₹" + Math.abs(Number(amountsObj[index]))}</td>
+            <td><button type="button" class="btn btn-danger" id=${index} onclick = "deleteTransaction(this.id)">Delete</button></td>
+            </tr>
+            `;
+        }
 
     });
 
@@ -171,18 +192,33 @@ function calculateExpense() {
         totalAmount += Number(amountsObj[Number(index)]);
     });
 
+    let absAmount = Math.abs(totalAmount);
+
     let table = document.getElementById('tableBody');
 
     let tchild = document.createElement('tr');
 
-    tchild.innerHTML = `
+    if( totalAmount < 0)
+    {
+        tchild.innerHTML = `
         <td colspan="4">
-            <div class="alert alert-primary" role="alert">
-            Total Amount = ${"₹" + totalAmount}
+            <div class="alert alert-danger" role="alert">
+            Total Amount = ${"₹" + totalAmount}, Kindly Save More Money !
             </div>
         </td>
-    `;
-
+        `;
+    }
+    else
+    {
+        tchild.innerHTML = `
+        <td colspan="4">
+            <div class="alert alert-primary" role="alert">
+            Total Amount = ${"₹" + totalAmount}, SAVINGS !!
+            </div>
+        </td>
+        `;
+    }
+    
     table.appendChild(tchild);
 
 };
